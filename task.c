@@ -1,9 +1,21 @@
 #include "task.h"
-  
+
 /*-- item section --*/
 
 size_t KNINT_SIZE = sizeof (knint);
 size_t ITEM_SIZE = sizeof (item_t);
+int buffer_knint_size = 100;
+knint* buffer
+knintmatrix* knm;
+// задачи:
+// 1. выдача новых данных
+// 2. хранение для удаления
+knint* get_knint() {
+  
+}
+
+knint*
+
 
 item_t* createitems(int size){
   if( size < 1 ) return NULL;
@@ -22,7 +34,7 @@ item_t* createitems0(int size){
   if( size < 1 ) return NULL;
   knint *p = (knint*)calloc (size,KNINT_SIZE),
         *w = (knint*)calloc (size,KNINT_SIZE);
-  item_t *items = (item_t*)calloc (size,ITEM_SIZE), 
+  item_t *items = (item_t*)calloc (size,ITEM_SIZE),
 		 *i;
   if( (p == 0) || (w == 0) || (items == 0) ) { return NULL; }
 
@@ -196,7 +208,7 @@ int put_item_simple (item_t *preplace, item_t **item, int *listlen) {
 			if ( *(pnext->p) < *(vitem->p)  ) {
 				preplace->next = vitem;
 				vitem->next = pnext->next;
-				free_items (&pnext);				
+				free_items (&pnext);
 				return 0;
 			} else {
 				return 1;
@@ -308,11 +320,11 @@ task_t* readtask(char* filename){
     for( tmp = head->p ; tmp < head->p+size ; tmp++ )
     { if( fscanf (file,"%lld", tmp) != 1 ) return 0; }
     for( tmp = head->w ; tmp < head->w+size ; tmp++ )
-    { 
+    {
       if( fscanf (file,"%lld", tmp) != 1 ) return 0;
       //if( *tmp > b ) morethanb++;
     }
-	
+
 	/*if( morethanb > 0 ) {
 		task_t* task2 = createtask(size-morethanb,b);
 		item_t* head2;
@@ -436,7 +448,7 @@ void clean_node (node_t* node){
 #if FULL_SOLUTION == 1
 
 void print_tree_inclojurefile (node_t* root, FILE* f){
-  print_node_inclojurefile (/*"{", */root, f);  
+  print_node_inclojurefile (/*"{", */root, f);
 }
 
 void print_node_inclojurefile (/*char * pre, */node_t* node, FILE* f){
@@ -464,16 +476,15 @@ void print_node_inclojurefile (/*char * pre, */node_t* node, FILE* f){
   } else {
 	fputs("nil,", f);
   }
-  fputs (":right ", f);	
+  fputs (":right ", f);
   if( node->rnode != NULL ) {
 	print_node_inclojurefile (/*strcat(rpre,"right:{"), */node->rnode, f);
 	fputs ("", f);
   } else {
-	fputs("nil", f);	  
+	fputs("nil", f);
   }
 //  free(lpre); free(rpre);
   fputs ("}",f);
 }
 
 #endif
-
