@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <time.h>
 
-// Full solution is list of items, not full is only knapsack weight and payoff.
-#define FULL_SOLUTION 1
+// Full solution is list of items; not full is only knapsack weight and payoff.
+#define FULL_SOLUTION 0
 
 #define NO_DEBUG 0
 #define LOW_DEBUG 1
@@ -76,7 +76,7 @@ int main ( int argc, char** argv ) {
     if ( root->length == -1 ) { puts("length == -1"); fflush(stdout); }
     else {
       if ( root->items == NULL ) puts ("Wwarning! There's no items!");
-      if ( root->items->p == NULL ) puts("Wwarning! There's no solutions!");
+      //if ( root->items->p == NULL ) puts("Wwarning! There's no solutions!");
 	  // get solution
       item_t *decis;
       for ( decis = root->items ; decis->next != NULL ; decis = decis->next );

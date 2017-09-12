@@ -4,7 +4,7 @@
 
 size_t KNINT_SIZE = sizeof (knint);
 size_t ITEM_SIZE = sizeof (item_t);
-int buffer_knint_size = 100;
+/*int buffer_knint_size = 100;
 knint* buffer
 knintmatrix* knm;
 // задачи:
@@ -15,7 +15,7 @@ knint* get_knint() {
 }
 
 knint*
-
+*/
 
 item_t* createitems(int count){
   return (item_t*)malloc (count*ITEM_SIZE);

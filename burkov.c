@@ -232,7 +232,7 @@ void dichosolve ( node_t* to, node_t* big, node_t* small, WITH_SPLICETYPE(knint 
     //puts("before for"); fflush(stdout);
     for( sp = small->items ; sp != NULL && (p = fp->p + sp->p, w = fp->w + sp->w, w<=cons) ; sp = sp->next ) {
 	//printf ("lastelemw=%ld w=%ld\n",*(lastelem->w),w);
-    	lastelem = find_preplace_badcutter (lastelem, &w, &(to->length));
+    	lastelem = find_preplace_badcutter (lastelem, w, &(to->length));
 		  if ( lastelem == NULL ) {
 			  puts("burkov.dichosolve: lastelem null!");
 			  //printf("w=%ld, preelemw=%ld, fpw=%ld\n",w,*(preelem->w), w-*(sp->w));
