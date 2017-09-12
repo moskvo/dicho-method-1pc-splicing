@@ -1,5 +1,6 @@
 #include "burkov.h"
 
+
 void (*dicho_tree) (node_t*, const int, item_t*) = dicho_tree_notrecursive;
 node_t* (*burkovtree)(const task_t*) = optimal_dichotomic_tree;
 void (*treesolver) (node_t*, WITH_SPLICETYPE(knint)) = notrecursive_treesolver;
@@ -23,7 +24,7 @@ node_t* optimal_dichotomic_tree ( const task_t *task){
 
   // head of optimal dichotomic tree
   node_t* head = createnodes (2*task->length-1); // number of all nodes of any tree is doubled number of it's leafs minus one.
-  head->hnode = NULL; // parentof the tree's head
+  head->hnode = NULL; // parent of the tree's head
 
   // DP branch
   node_t *p = head;
@@ -168,7 +169,7 @@ void notrecursive_treesolver ( node_t* root, WITH_SPLICETYPE(knint cons) ){
 
   	//printf ( "depth = %d. length = %d, right length = %d, left length = %d\n", depth, runner->length, runner->rnode->length, runner->lnode->length );
   	//fflush (stdout);
-		
+
 		dichosolve (runner, bignode, smallnode, WITH_SPLICEVAR(cons) );
 
 		//clear_node (runner->lnode);
@@ -209,7 +210,7 @@ void copy_bignode ( node_t* to,  node_t* big, node_t* small ) {
 }
 
 void dichosolve ( node_t* to, node_t* big, node_t* small, WITH_SPLICETYPE(knint cons) ) {
- 
+
 	#if FULL_SOLUTION == 1
 		copy_bignode ( to, big, small );
 	#elif FULL_SOLUTION == 0
@@ -229,17 +230,17 @@ void dichosolve ( node_t* to, node_t* big, node_t* small, WITH_SPLICETYPE(knint 
     if ( fp->flag == NEW_ELEM ) { fp->flag = OLD_ELEM; continue; }
     lastelem = fp;
     //puts("before for"); fflush(stdout);
-    for( sp = small->items ; sp != NULL && (p = *(fp->p) + *(sp->p), w = *(fp->w) + *(sp->w), w<=cons) ; sp = sp->next ) {
+    for( sp = small->items ; sp != NULL && (p = fp->p + sp->p, w = fp->w + sp->w, w<=cons) ; sp = sp->next ) {
 	//printf ("lastelemw=%ld w=%ld\n",*(lastelem->w),w);
     	lastelem = find_preplace_badcutter (lastelem, &w, &(to->length));
-		if ( lastelem == NULL ) {
-			puts("burkov.dichosolve: lastelem null!");
-			//printf("w=%ld, preelemw=%ld, fpw=%ld\n",w,*(preelem->w), w-*(sp->w));
-			fflush(stdout);
-		}
+		  if ( lastelem == NULL ) {
+			  puts("burkov.dichosolve: lastelem null!");
+			  //printf("w=%ld, preelemw=%ld, fpw=%ld\n",w,*(preelem->w), w-*(sp->w));
+			  fflush(stdout);
+		  }
     	tmp = copyitem (lastelem);
-    	*(tmp->p) = p;
-    	*(tmp->w) = w;
+    	tmp->p = p;
+    	tmp->w = w;
 	//puts("before put_item"); fflush(stdout);
     	put_item (lastelem, &tmp, &(to->length));
     } // for sp
@@ -253,7 +254,7 @@ void dichosolve ( node_t* to, node_t* big, node_t* small, WITH_SPLICETYPE(knint 
     }
   } // for fp
 
-#if FULL_SOLUTION == 0  
+#if FULL_SOLUTION == 0
   //puts("put new elements of second table or replace elements having less value");fflush(stdout);
   item_t *desert = createitems0(1); // head of bad items to hold them in small list later
   int desertlen = 0;
@@ -261,10 +262,10 @@ void dichosolve ( node_t* to, node_t* big, node_t* small, WITH_SPLICETYPE(knint 
   fp = small->items;
   small->items = small->items->next;
   if ( (tmp = find_preplace_badcutter_simple(lastelem, fp->w, &(to->length))) == NULL ) { // if we must put item with fp->w weight to first place
-	if ( *(to->items->w) == *(fp->w) ) {		
-		if ( *(to->items->p) < *(fp->p) ) { // replace head of to->items with fp
+	if ( to->items->w == fp->w ) {
+		if ( to->items->p < fp->p ) { // replace head of to->items with fp
 			// TODO may be put fp to desert?
-			*(to->items->p) = *(fp->p);
+			to->items->p = fp->p;
 			free_items (&fp);
 		} else {
 			fp->next = desert->next;
@@ -289,7 +290,7 @@ void dichosolve ( node_t* to, node_t* big, node_t* small, WITH_SPLICETYPE(knint 
 		desertlen++;
 	}
   }
-  
+
   //puts ("cycle 'put new elements of second table ...'"); fflush(stdout);
   for( fp = small->items ; fp != NULL /*&& *(fp->w) <= cons*/ ; ) {
     lastelem = find_preplace_badcutter_simple (lastelem, fp->w, &(to->length));
@@ -312,9 +313,9 @@ void dichosolve ( node_t* to, node_t* big, node_t* small, WITH_SPLICETYPE(knint 
   lastelem = to->items;
   fp = small->items;
   if ( (tmp = find_preplace_badcutter_simple(lastelem, fp->w, &(to->length))) == NULL ) { // if we must put item with fp->w weight to first place
-		if ( *(to->items->w) == *(fp->w) ) {		
-			if ( *(to->items->p) < *(fp->p) ) { // replace head of to->items with fp
-				*(to->items->p) = *(fp->p);
+		if ( to->items->w == fp->w ) {
+			if ( to->items->p < fp->p ) { // replace head of to->items with fp
+				to->items->p = fp->p;
 			}
 		} else { // Put fp to first place
 			sp = copyitem(fp);
@@ -350,8 +351,8 @@ void dichosolve ( node_t* to, node_t* big, node_t* small, WITH_SPLICETYPE(knint 
   //puts("delete inefficient elems in tail");	fflush(stdout);
 	knint edge;
 	do {
-		edge = *(lastelem->p);
-		while ( lastelem->next != NULL && /*lastelem->next->flag != TRUE_ELEM && */edge >= *(lastelem->next->p) ) {
+		edge = lastelem->p;
+		while ( lastelem->next != NULL && /*lastelem->next->flag != TRUE_ELEM && */edge >= lastelem->next->p ) {
 			tmp = lastelem->next;
 			lastelem->next = lastelem->next->next;
 			free_items (&tmp);
@@ -370,7 +371,7 @@ void dichosolve ( node_t* to, node_t* big, node_t* small, WITH_SPLICETYPE(knint 
 	do {
 		lastelem = fp->next;
 		gapflag = 0;
-		while ( lastelem != NULL && *(lastelem->w) - *(fp->w) <= splicegap ) {
+		while ( lastelem != NULL && lastelem->w - fp->w <= splicegap ) {
 			//maxp = *(lastelem->p);
 			//maxw = *(lastelem->w);
 			lastelem = lastelem->next;
@@ -378,18 +379,18 @@ void dichosolve ( node_t* to, node_t* big, node_t* small, WITH_SPLICETYPE(knint 
 		}
 		if ( gapflag == 1 ) {
 			// cut spliced elements
-			
+
 			// glue gap
-			for ( sp = fp->next ; sp->next != lastelem ; ) { 
+			for ( sp = fp->next ; sp->next != lastelem ; ) {
 				tmp = sp;
 				sp = sp->next;
 				free_items(&tmp);
 				to->length--;
 			}
-			
-			*(fp->p) = *(sp->p);
+
+			fp->p = sp->p;
 			#ifdef SPLICING_DOWN
-			 *(fp->w) = *(sp->w);
+			 fp->w = sp->w;
 			#endif
 			fp->flag = sp->flag;
 			free_items(&sp);

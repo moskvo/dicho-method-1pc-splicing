@@ -29,7 +29,7 @@ int main ( int argc, char** argv ) {
 
 	time_t clock1, clock2;
 	clock1 = time(NULL);
-	
+
   if ( argc < 2 ) {
     printf("not enough arguments: filename needed\n");
     exit(-1);
@@ -41,7 +41,7 @@ int main ( int argc, char** argv ) {
 /* get task */
   mytask = readtask (argv[1]);
 
-	if( mytask->length < 1 ) { 
+	if( mytask->length < 1 ) {
 		puts("There is no solution");
 		exit(0);
 	}
@@ -96,7 +96,7 @@ int main ( int argc, char** argv ) {
       // print it
         //if( (file = fopen("out.txt","w")) == 0 ) return -1;
 		//printf("solution: (%lld, %lld), time: %ld sec\n", *(decis->p), *(decis->w), clock2-clock1);
-		printf("%lld\n%lld\n%ld\n", *(decis->p), *(decis->w), clock2-clock1);
+		printf("%lld\n%lld\n%ld\n", decis->p, decis->w, clock2-clock1);
       //fprintf (file, "%lld %lld %ld\n", *(decis->p), *(decis->w), clock2-clock1 ); //fflush(stdout);
 	  //fclose(file);
 		//puts("ok");
