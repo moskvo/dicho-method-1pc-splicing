@@ -231,7 +231,7 @@ void dichosolve ( node_t* to, node_t* big, node_t* small, WITH_SPLICETYPE(knint 
     lastelem = fp;
     //puts("before for"); fflush(stdout);
     for( sp = small->items ; sp != NULL && (p = fp->p + sp->p, w = fp->w + sp->w, w<=cons) ; sp = sp->next ) {
-	//printf ("lastelemw=%ld w=%ld\n",*(lastelem->w),w);
+	// printf ("lastelemw=%ld w=%ld\n",lastelem->w,w); fflush(stdout);
     	lastelem = find_preplace_badcutter (lastelem, w, &(to->length));
 		  if ( lastelem == NULL ) {
 			  puts("burkov.dichosolve: lastelem null!");
@@ -241,10 +241,9 @@ void dichosolve ( node_t* to, node_t* big, node_t* small, WITH_SPLICETYPE(knint 
     	tmp = copyitem (lastelem);
     	tmp->p = p;
     	tmp->w = w;
-	//puts("before put_item"); fflush(stdout);
+	// puts("before put_item"); fflush(stdout);
     	put_item (lastelem, &tmp, &(to->length));
     } // for sp
-    // puts("after for"); fflush(stdout);
     // puts("after for"); fflush(stdout);
     if ( fp->flag == ONESHOT_ELEM ) {
     	preelem->next = fp->next; // preelem isn't NULL cause ONESHOT_ELEM cann't be a first, see put_item().
@@ -291,7 +290,7 @@ void dichosolve ( node_t* to, node_t* big, node_t* small, WITH_SPLICETYPE(knint 
 	}
   }
 
-  //puts ("cycle 'put new elements of second table ...'"); fflush(stdout);
+  // puts ("cycle 'put new elements of second table ...'"); fflush(stdout);
   for( fp = small->items ; fp != NULL /*&& *(fp->w) <= cons*/ ; ) {
     lastelem = find_preplace_badcutter_simple (lastelem, fp->w, &(to->length));
     tmp = fp->next;

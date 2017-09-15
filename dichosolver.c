@@ -35,27 +35,32 @@ int main ( int argc, char** argv ) {
     exit(-1);
   }
 
+  init_buffer();
+
   task_t *mytask;
   node_t *root = NULL;
 
-/* get task */
-  mytask = readtask (argv[1]);
+  #if DBGLVL >= LOW_DEBUG
+    puts("Try to read task..."); fflush(stdout);
+  #endif
 
-	if( mytask->length < 1 ) {
-		puts("There is no solution");
-		exit(0);
-	}
+  mytask = readtask (argv[1]);
+  	if( mytask == NULL || mytask->length < 1 ) {
+  		puts("There is no solution");
+  		exit(0);
+  	}
+
     #if DBGLVL >= LOW_DEBUG
 		printf("Task readed. b=%lld, size=%d.\n",mytask->b,mytask->length);
 		puts("build tree..."); fflush(stdout);
     #endif
 
-    //{ solve mytask
-    if( (root = burkovtree ( mytask )) == NULL )
-    	{ puts("Can't build optdichotree"); fflush(stdout); }
+  //{ solve mytask
+  if( (root = burkovtree ( mytask )) == NULL )
+    { puts("Can't build optdichotree"); fflush(stdout); }
 
     #if DBGLVL >= HI_DEBUG
-	print_tree (root); fflush(stdout);
+	    print_tree (root); fflush(stdout);
     #endif
     #if DBGLVL >= LOW_DEBUG
     	puts("solve task..."); fflush(stdout);

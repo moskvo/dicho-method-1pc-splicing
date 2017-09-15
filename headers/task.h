@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 #define MAXINT(x,y) ((x>y)?(x):(y))
 
@@ -52,7 +53,7 @@ item_t* find_preplace_badcutter_simple (item_t*, knint, int*);
 
 typedef struct task{
   knint b;
-  item_t *items;
+  item_t* items;
   int length;
 #ifdef BUR_SPLICING
   int splicegap;

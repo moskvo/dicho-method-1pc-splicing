@@ -4,29 +4,69 @@
 
 size_t KNINT_SIZE = sizeof (knint);
 size_t ITEM_SIZE = sizeof (item_t);
-/*int buffer_knint_size = 100;
-knint* buffer
-knintmatrix* knm;
-// задачи:
+
+// задачи буферизации:
 // 1. выдача новых данных
 // 2. хранение для удаления
-knint* get_knint() {
+typedef long long rows_length_t;
+struct buffer_t {
+  item_t** rows;
+  rows_length_t* rows_length;
+  int length;
+  int curRow, curCol;
+} buffer;
 
+int buffer_length = 20;
+long long buffer_row_length = 1000000;
+double buffer_row_length_growth = 1.2;
+void init_buffer (){
+  buffer.length = buffer_length;
+  buffer.rows = (item_t**) malloc (buffer_length*sizeof(item_t*));
+  buffer.rows_length = (rows_length_t*) malloc (buffer_length*sizeof(rows_length_t));
+  buffer.rows_length[0] = buffer_row_length;
+  buffer.rows[0] = (item_t*) calloc (buffer_row_length,ITEM_SIZE);
+  buffer.curRow = 0;
+  buffer.curCol = 0;
 }
 
-knint*
-*/
+int next_buffer_row(int count){
+  int cr = buffer.curRow = buffer.curRow + 1;
+  // increase buffer if it necessary
+  if ( cr >= buffer.length ) {
+    buffer.length += buffer_length;
+    buffer.rows = (item_t**) realloc(buffer.rows, buffer.length*sizeof(item_t*));
+    buffer.rows_length = (rows_length_t*) realloc(buffer.rows_length, buffer.length*sizeof(rows_length_t));
+    if ( buffer.rows == NULL || buffer.rows_length == NULL ) {
+      puts("next_buffer_row: all bad - you have not enough memory"); fflush(stdout);
+      return 1;
+    }
+  }
+  buffer.rows_length[cr] = (int) fmax (count, floor (buffer.rows_length[cr-1] * buffer_row_length_growth));
+  buffer.rows[cr] = (item_t*) calloc (buffer.rows_length[cr],ITEM_SIZE);
+  buffer.curCol = 0;
+  return 0;
+}
+
+item_t* get_items(int count) {
+  if ( buffer.rows_length[buffer.curRow]-buffer.curCol < count ) next_buffer_row(count);
+  item_t* r = buffer.rows[buffer.curRow] + buffer.curCol;
+  buffer.curCol += count;
+  return r;
+}
 
 item_t* createitems(int count){
-  return (item_t*)malloc (count*ITEM_SIZE);
+  //return (item_t*)malloc (count*ITEM_SIZE);
+  return get_items(count);
 }
 
 item_t* createitems0(int count){
-  return (item_t*)calloc (count,ITEM_SIZE);
+  //return (item_t*)calloc (count,ITEM_SIZE);
+  return get_items(count);
 }
 
-item_t* copyitem (item_t *other){
-  return (item_t*) memcpy(malloc(ITEM_SIZE),other,ITEM_SIZE);
+item_t* copyitem (item_t* other){
+  //return (item_t*) memcpy(malloc(ITEM_SIZE),other,ITEM_SIZE);
+  return (item_t*) memcpy(get_items(1),other,ITEM_SIZE);
 }
 
 /*item_t* copyitems (int size, item_t *others) {
@@ -83,19 +123,19 @@ void print_items_list (item_t *list){
 
 void free_items (item_t **headp){
   if ( headp ) {
-    free (*headp);
+    /*free (*headp);*/
     *headp = NULL;
   }
 }
 
 void free_items_list (item_t **list){
   if ( list ) {
-    item_t *p, *tmp;
+    /*item_t *p, *tmp;
     for ( p = *list ; p != NULL ; ) {
       tmp = p->next;
       free_items (&p);
       p = tmp;
-    }
+    }*/
     *list = NULL;
   }
 }
@@ -284,13 +324,16 @@ task_t* readtask(char* filename){
     int size;
     if( fscanf(file,"%d",&size) != 1 ) return NULL;
 
+    //puts("create task"); fflush(stdout);
     task = createtask(size,b);
+    //puts("task created"); fflush(stdout);
 
     item_t *head = task->items;
     item_t *tmp;
     //int morethanb = 0;
     for( tmp = head ; tmp < head+size ; tmp++ )
     { if( fscanf (file,"%lld", &(tmp->p)) != 1 ) return 0; }
+    //puts("ps readed, try to read ws"); fflush(stdout);
     for( tmp = head ; tmp < head+size ; tmp++ )
     {
       if( fscanf (file,"%lld", &(tmp->w)) != 1 ) return 0;
