@@ -13,9 +13,7 @@
 #include "task.h"
 #endif
 
-#ifndef _MATH_H_
 #include <math.h>
-#endif
 
 
 /*

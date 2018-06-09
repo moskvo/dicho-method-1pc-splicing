@@ -1,0 +1,1 @@
+{:data [[8,2] [11,4]],:left {:data [[3,2]],:left nil,:right nil},:right {:data [[8,2]],:left {:data [[6,4]],:left nil,:right nil},:right {:data [[8,2]],:left {:data [[7,3]],:left nil,:right nil},:right {:data [[8,2]],:left {:data [[2,3]],:left nil,:right nil},:right {:data [[8,2]],:left nil,:right nil}}}}}
