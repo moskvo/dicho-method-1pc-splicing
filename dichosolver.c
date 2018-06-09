@@ -3,7 +3,7 @@
 #include <time.h>
 
 // Full solution is list of items; not full is only knapsack weight and payoff.
-#define FULL_SOLUTION 0
+#define FULL_SOLUTION 1
 
 #define NO_DEBUG 0
 #define LOW_DEBUG 1

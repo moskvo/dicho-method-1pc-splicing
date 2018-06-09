@@ -425,14 +425,14 @@ void print_tree_inclojurefile (node_t* root, FILE* f){
 
 void print_node_inclojurefile (/*char * pre, */node_t* node, FILE* f){
   fputs ("{",f);
-  fputs (":data ",f);
-  if( node->length < 1 ) fprintf(f, "nil");
+  fputs ("'data': ",f);
+  if( node->length < 1 ) fprintf(f, "None");
   else {
-	fputs("[",f);
+    fputs("[",f);
     item_t *item = node->items;
-	if ( item != NULL ) fprintf (f, "[%lld,%lld]", item->p, item->w);
+    if ( item != NULL ) fprintf (f, "[%lld,%lld],", item->p, item->w);
     for ( item = item->next ; item != NULL ; item = item->next ) {
-      fprintf (f, " [%lld,%lld]", item->p, item->w);
+      fprintf (f, " [%lld,%lld],", item->p, item->w);
     }
 	fputs("]",f);
   }
@@ -441,19 +441,19 @@ void print_node_inclojurefile (/*char * pre, */node_t* node, FILE* f){
 //  char *lpre = (char*)malloc(strlen(pre)+4), *rpre = (char*)malloc(strlen(pre)+4);
 //  strcpy(lpre,pre);
 //  strcpy(rpre,pre);
-  fputs (":left ", f);
+  fputs ("'left': ", f);
   if( node->lnode != NULL ) {
 	print_node_inclojurefile (/*strcat(lpre,"left:{"), */node->lnode, f);
 	fputs (",", f);
   } else {
-	fputs("nil,", f);
+	fputs("None,", f);
   }
-  fputs (":right ", f);
+  fputs ("'right': ", f);
   if( node->rnode != NULL ) {
 	print_node_inclojurefile (/*strcat(rpre,"right:{"), */node->rnode, f);
 	fputs ("", f);
   } else {
-	fputs("nil", f);
+	fputs("None", f);
   }
 //  free(lpre); free(rpre);
   fputs ("}",f);
